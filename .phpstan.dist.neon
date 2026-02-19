@@ -36,5 +36,8 @@ parameters:
     ignoreErrors:
         - identifier: missingType.iterableValue
         -
+            identifier: property.missingOverride
+            path: '*/Helper/Data.php'
+        -
             identifier: echo.nonString
             path: '*/template/*'

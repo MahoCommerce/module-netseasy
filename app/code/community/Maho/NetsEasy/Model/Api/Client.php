@@ -15,7 +15,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Maho_NetsEasy_Model_Api_Client
 {
-    private const TIMEOUT = 30;
+    private const int TIMEOUT = 30;
 
     private ?HttpClientInterface $httpClient = null;
 

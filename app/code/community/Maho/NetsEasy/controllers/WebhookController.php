@@ -83,7 +83,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
         }
 
         $paymentId = $data['data']['paymentId'] ?? null;
-        if (!$paymentId || !preg_match('/^[a-f0-9-]+$/i', $paymentId)) {
+        if (!$paymentId || !preg_match('/^[a-f0-9-]+$/i', (string) $paymentId)) {
             $this->_sendJsonResponse(400, ['error' => 'Invalid or missing paymentId']);
             return null;
         }

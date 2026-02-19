@@ -25,7 +25,7 @@ class Maho_NetsEasy_Model_Locale
     /**
      * Map of Nets-supported country codes to checkout locale strings
      */
-    private const COUNTRY_LOCALE_MAP = [
+    private const array COUNTRY_LOCALE_MAP = [
         'SWE' => 'sv-SE',
         'NOR' => 'nb-NO',
         'DNK' => 'da-DK',
@@ -46,7 +46,7 @@ class Maho_NetsEasy_Model_Locale
     /**
      * Full ISO-2 to ISO-3 country code mapping
      */
-    private const ISO2_TO_ISO3 = [
+    private const array ISO2_TO_ISO3 = [
         'AF' => 'AFG', 'AL' => 'ALB', 'DZ' => 'DZA', 'AS' => 'ASM', 'AD' => 'AND',
         'AO' => 'AGO', 'AG' => 'ATG', 'AR' => 'ARG', 'AM' => 'ARM', 'AU' => 'AUS',
         'AT' => 'AUT', 'AZ' => 'AZE', 'BS' => 'BHS', 'BH' => 'BHR', 'BD' => 'BGD',

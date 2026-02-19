@@ -3,3 +3,13 @@ composer.lock
 .idea/
 .vscode/
 .DS_Store
+.phpstan.cache/
+.php-cs-fixer.cache
+
+/maho
+/public/*
+!/public/js/
+/public/js/*
+!/public/js/maho/
+/public/js/maho/*
+!/public/js/maho/netseasy.js

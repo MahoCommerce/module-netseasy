@@ -103,6 +103,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
     private function _getStoreIdByPaymentId(string $paymentId): ?int
     {
         $resource = Mage::getSingleton('core/resource');
+        /** @var Maho\Db\Adapter\AdapterInterface $adapter */
         $adapter = $resource->getConnection('core_read');
         $select = $adapter->select()
             ->from(
@@ -131,6 +132,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
     private function _loadOrderByPaymentId(string $paymentId): ?Mage_Sales_Model_Order
     {
         $resource = Mage::getSingleton('core/resource');
+        /** @var Maho\Db\Adapter\AdapterInterface $adapter */
         $adapter = $resource->getConnection('core_read');
         $select = $adapter->select()
             ->from($resource->getTableName('netseasy/payment'), ['order_id'])
@@ -185,6 +187,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
                 return;
             }
 
+            /** @var Mage_Sales_Model_Order_Payment $payment */
             $payment = $order->getPayment();
             $payment->setAdditionalInformation('netseasy_payment_type', $paymentResponse->getPaymentType());
             $payment->setAdditionalInformation('netseasy_payment_method', $paymentResponse->getPaymentMethod());
@@ -250,8 +253,9 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
             }
 
             if ($chargeId) {
-                $order->getPayment()
-                    ->setAdditionalInformation('netseasy_last_charge_id', $chargeId)
+                /** @var Mage_Sales_Model_Order_Payment $chargePayment */
+                $chargePayment = $order->getPayment();
+                $chargePayment->setAdditionalInformation('netseasy_last_charge_id', $chargeId)
                     ->save();
             }
 

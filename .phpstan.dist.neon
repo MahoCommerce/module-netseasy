@@ -10,7 +10,7 @@ parameters:
         matchingInheritedMethodNames: true
         disallowedBacktick: true
 
-    level: 6
+    level: 8
     tmpDir: .phpstan.cache
     reportUnmatchedIgnoredErrors: true
     checkFunctionNameCase: true
@@ -35,3 +35,6 @@ parameters:
 
     ignoreErrors:
         - identifier: missingType.iterableValue
+        -
+            identifier: echo.nonString
+            path: '*/template/*'

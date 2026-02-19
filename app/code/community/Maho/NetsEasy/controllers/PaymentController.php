@@ -40,7 +40,8 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
             return;
         }
 
-        $paymentId = $order->getPayment()->getAdditionalInformation('netseasy_payment_id');
+        $payment = $order->getPayment();
+        $paymentId = $payment ? $payment->getAdditionalInformation('netseasy_payment_id') : null;
         if (!$paymentId) {
             $session->addError($this->_getHelper()->__('Payment session could not be initialized.'));
             $this->_redirect('checkout/cart');
@@ -81,7 +82,8 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
             return;
         }
 
-        $paymentId = $order->getPayment()->getAdditionalInformation('netseasy_payment_id');
+        $payment = $order->getPayment();
+        $paymentId = $payment ? $payment->getAdditionalInformation('netseasy_payment_id') : null;
         $checkoutKey = $this->_getHelper()->getCheckoutKey((int) $order->getStoreId());
 
         if (!$paymentId || !$checkoutKey) {
@@ -121,7 +123,8 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
             return;
         }
 
-        $paymentId = $order->getPayment()->getAdditionalInformation('netseasy_payment_id');
+        $payment = $order->getPayment();
+        $paymentId = $payment ? $payment->getAdditionalInformation('netseasy_payment_id') : null;
         if (!$paymentId) {
             if ($isAjax) {
                 $this->_restoreQuoteAndSendJsonError();
@@ -193,7 +196,8 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
 
         if ($order->getId()) {
             // Terminate the Nets Easy checkout session
-            $paymentId = $order->getPayment()->getAdditionalInformation('netseasy_payment_id');
+            $payment = $order->getPayment();
+            $paymentId = $payment ? $payment->getAdditionalInformation('netseasy_payment_id') : null;
             if ($paymentId) {
                 try {
                     $this->_getApiPayment()->terminatePayment($paymentId, (int) $order->getStoreId());

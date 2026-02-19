@@ -73,6 +73,7 @@ class Maho_NetsEasy_Model_Observer
         // Link order_id in the netseasy_payment tracking table
         try {
             $resource = Mage::getSingleton('core/resource');
+            /** @var Maho\Db\Adapter\AdapterInterface $connection */
             $connection = $resource->getConnection('core_write');
             $table = $resource->getTableName('netseasy/payment');
 

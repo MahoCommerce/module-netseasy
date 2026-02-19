@@ -77,6 +77,7 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
     #[\Override]
     public function initialize($paymentAction, $stateObject): self
     {
+        /** @var Maho\DataObject $stateObject */
         $stateObject->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
         $stateObject->setStatus('pending_payment');
         $stateObject->setIsNotified(false);
@@ -503,6 +504,7 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     private function savePaymentRecord(string $paymentId, int $quoteId, string $checkoutFlow): void
     {
+        /** @var Maho\Db\Adapter\AdapterInterface $connection */
         $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
         $table = Mage::getSingleton('core/resource')->getTableName('netseasy/payment');
 

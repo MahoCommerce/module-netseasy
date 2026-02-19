@@ -12,23 +12,39 @@ declare(strict_types=1);
 
 class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
 {
+    #[\Override]
     protected $_code = 'netseasy';
 
+    #[\Override]
     protected $_formBlockType = 'netseasy/form';
+    #[\Override]
     protected $_infoBlockType = 'netseasy/info';
 
+    #[\Override]
     protected $_isInitializeNeeded      = true;
+    #[\Override]
     protected $_isGateway               = true;
+    #[\Override]
     protected $_canAuthorize            = true;
+    #[\Override]
     protected $_canCapture              = true;
+    #[\Override]
     protected $_canCapturePartial       = true;
+    #[\Override]
     protected $_canRefund               = true;
+    #[\Override]
     protected $_canRefundInvoicePartial = true;
+    #[\Override]
     protected $_canVoid                 = true;
+    #[\Override]
     protected $_canUseInternal          = false;
+    #[\Override]
     protected $_canUseCheckout          = true;
+    #[\Override]
     protected $_canUseForMultishipping  = false;
+    #[\Override]
     protected $_canFetchTransactionInfo = true;
+    #[\Override]
     protected $_canManageRecurringProfiles = false;
 
     private function getHelper(): Maho_NetsEasy_Helper_Data

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 class Maho_NetsEasy_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    #[\Override]
     protected $_moduleName = 'Maho_NetsEasy';
 
     public const API_URL_TEST = 'https://test.api.dibspayment.eu';

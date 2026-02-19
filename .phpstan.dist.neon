@@ -27,5 +27,11 @@ parameters:
     paths:
         - app
 
+    excludePaths:
+        analyse:
+            - vendor/mahocommerce/maho-phpstan-plugin/mock
+        analyseAndScan:
+            - vendor/mahocommerce/maho-phpstan-plugin/mock
+
     ignoreErrors:
         - identifier: missingType.iterableValue

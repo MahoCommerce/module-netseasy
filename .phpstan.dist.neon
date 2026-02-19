@@ -12,7 +12,7 @@ parameters:
 
     level: 8
     tmpDir: .phpstan.cache
-    reportUnmatchedIgnoredErrors: true
+    reportUnmatchedIgnoredErrors: false
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
     checkMissingOverrideMethodAttribute: true

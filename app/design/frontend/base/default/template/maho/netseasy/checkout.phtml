@@ -1,0 +1,21 @@
+<?php
+/**
+ * Maho
+ *
+ * @package    Maho_NetsEasy
+ * @copyright  Copyright (c) 2026 Maho (https://mahocommerce.com)
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/** @var Maho_NetsEasy_Block_Checkout $this */
+?>
+<div id="netseasy-checkout"
+     data-payment-id="<?= $this->escapeHtml($this->getPaymentId()) ?>"
+     data-checkout-key="<?= $this->escapeHtml($this->getCheckoutKey()) ?>"
+     data-return-url="<?= $this->escapeUrl($this->getReturnUrl()) ?>"
+     data-locale="<?= $this->escapeHtml($this->getLocale()) ?>"
+     data-msg-processing="<?= $this->escapeHtml($this->getMsgProcessing()) ?>"
+     data-msg-missing-config="<?= $this->escapeHtml($this->getMsgMissingConfig()) ?>"
+     data-msg-load-failed="<?= $this->escapeHtml($this->getMsgLoadFailed()) ?>">
+</div>
+<script src="<?= $this->escapeUrl($this->getJsUrl('maho/netseasy/checkout.js')) ?>"></script>

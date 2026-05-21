@@ -1,15 +1,9 @@
 # Maho NetsEasy
 
-[![PHP Syntax](https://github.com/MahoCommerce/module-netseasy/actions/workflows/syntax-php.yml/badge.svg)](https://github.com/MahoCommerce/module-netseasy/actions/workflows/syntax-php.yml)
-[![PHPStan](https://github.com/MahoCommerce/module-netseasy/actions/workflows/phpstan.yml/badge.svg)](https://github.com/MahoCommerce/module-netseasy/actions/workflows/phpstan.yml)
-[![PHP CS Fixer](https://github.com/MahoCommerce/module-netseasy/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/MahoCommerce/module-netseasy/actions/workflows/php-cs-fixer.yml)
-[![Rector](https://github.com/MahoCommerce/module-netseasy/actions/workflows/rector.yml/badge.svg)](https://github.com/MahoCommerce/module-netseasy/actions/workflows/rector.yml)
-[![Composer Validate](https://github.com/MahoCommerce/module-netseasy/actions/workflows/composer.yml/badge.svg)](https://github.com/MahoCommerce/module-netseasy/actions/workflows/composer.yml)
-[![Line Endings](https://github.com/MahoCommerce/module-netseasy/actions/workflows/line-endings.yml/badge.svg)](https://github.com/MahoCommerce/module-netseasy/actions/workflows/line-endings.yml)
-
+![Maho Commerce](https://img.shields.io/badge/Maho_Commerce-module-orange)
 ![License](https://img.shields.io/badge/license-OSL--3.0-blue)
 ![PHP](https://img.shields.io/badge/php-%3E%3D8.3-8892BF)
-![Maho Commerce](https://img.shields.io/badge/Maho_Commerce-module-orange)
+![PHPStan Level](https://img.shields.io/badge/PHPStan-level%208-brightgreen)
 
 **Nexi Nets Easy** (formerly DIBS) payment gateway integration for [Maho Commerce](https://mahocommerce.com).
 

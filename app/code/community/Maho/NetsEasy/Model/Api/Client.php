@@ -45,6 +45,19 @@ class Maho_NetsEasy_Model_Api_Client
         $url = $helper->getApiBaseUrl($storeId) . $endpoint;
         $secretKey = $helper->getApiSecretKey($storeId);
 
+        if ($secretKey === '') {
+            $environment = $helper->isTestMode($storeId) ? 'test' : 'live';
+            Mage::log(
+                sprintf('NetsEasy API: missing %s secret key for store %s', $environment, $storeId ?? 'default'),
+                Mage::LOG_ERROR,
+                'netseasy.log',
+            );
+            Mage::throwException(Mage::helper('netseasy')->__(
+                'Nets Easy secret key is not configured for this store (%s environment). Please set it in the payment method configuration.',
+                $environment,
+            ));
+        }
+
         $options = [
             'headers' => [
                 'Authorization' => $secretKey,
@@ -59,7 +72,14 @@ class Maho_NetsEasy_Model_Api_Client
         if ($helper->isDebugEnabled($storeId)) {
             $sanitizedBody = $this->redactSensitiveFields($body);
             Mage::log(
-                sprintf('NetsEasy API %s %s: %s', $method, $endpoint, Mage::helper('core')->jsonEncode($sanitizedBody)),
+                sprintf(
+                    'NetsEasy API %s %s (store %s, key length %d): %s',
+                    $method,
+                    $url,
+                    $storeId ?? 'default',
+                    strlen($secretKey),
+                    Mage::helper('core')->jsonEncode($sanitizedBody),
+                ),
                 Mage::LOG_DEBUG,
                 'netseasy.log',
             );

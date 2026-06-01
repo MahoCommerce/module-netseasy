@@ -22,7 +22,7 @@ class Maho_NetsEasy_Helper_Data extends Mage_Core_Helper_Abstract
     public function getApiSecretKey(?int $storeId = null): string
     {
         $field = $this->isTestMode($storeId) ? 'test_secret_key' : 'live_secret_key';
-        return (string) Mage::getStoreConfig(self::CONFIG_PATH_PREFIX . $field, $storeId);
+        return trim((string) Mage::getStoreConfig(self::CONFIG_PATH_PREFIX . $field, $storeId));
     }
 
     public function getCheckoutKey(?int $storeId = null): string

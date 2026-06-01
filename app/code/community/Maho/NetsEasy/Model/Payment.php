@@ -496,7 +496,7 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
             'payment_id' => $paymentId,
             'quote_id' => $quoteId,
             'checkout_flow' => $checkoutFlow,
-            'created_at' => Mage_Core_Model_Locale::now(),
+            'created_at' => Mage_Core_Model_Locale::nowUtc(),
         ]);
     }
 }

@@ -73,11 +73,10 @@ class Maho_NetsEasy_Model_Api_Client
             $sanitizedBody = $this->redactSensitiveFields($body);
             Mage::log(
                 sprintf(
-                    'NetsEasy API %s %s (store %s, key length %d): %s',
+                    'NetsEasy API %s %s (store %s): %s',
                     $method,
                     $url,
                     $storeId ?? 'default',
-                    strlen($secretKey),
                     Mage::helper('core')->jsonEncode($sanitizedBody),
                 ),
                 Mage::LOG_DEBUG,

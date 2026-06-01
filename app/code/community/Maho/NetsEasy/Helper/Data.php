@@ -22,7 +22,7 @@ class Maho_NetsEasy_Helper_Data extends Mage_Core_Helper_Abstract
     public function getApiSecretKey(?int $storeId = null): string
     {
         $field = $this->isTestMode($storeId) ? 'test_secret_key' : 'live_secret_key';
-        return trim((string) Mage::getStoreConfig(self::CONFIG_PATH_PREFIX . $field, $storeId));
+        return $this->getDecryptedConfig($field, $storeId);
     }
 
     public function getCheckoutKey(?int $storeId = null): string
@@ -48,7 +48,21 @@ class Maho_NetsEasy_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getWebhookSecret(?int $storeId = null): string
     {
-        return (string) Mage::getStoreConfig(self::CONFIG_PATH_PREFIX . 'webhook_secret', $storeId);
+        return $this->getDecryptedConfig('webhook_secret', $storeId);
+    }
+
+    /**
+     * Reads an encrypted config field (backend_model adminhtml/system_config_backend_encrypted)
+     * and returns the decrypted, trimmed plaintext. Mage::getStoreConfig() returns the stored
+     * ciphertext, so it must be passed through the encryptor before use.
+     */
+    private function getDecryptedConfig(string $field, ?int $storeId): string
+    {
+        $value = (string) Mage::getStoreConfig(self::CONFIG_PATH_PREFIX . $field, $storeId);
+        if ($value === '') {
+            return '';
+        }
+        return trim(Mage::helper('core')->decrypt($value));
     }
 
     public function getTermsUrl(?int $storeId = null): string

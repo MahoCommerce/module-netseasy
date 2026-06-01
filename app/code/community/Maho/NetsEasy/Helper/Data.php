@@ -17,6 +17,9 @@ class Maho_NetsEasy_Helper_Data extends Mage_Core_Helper_Abstract
     public const API_URL_TEST = 'https://test.api.dibspayment.eu';
     public const API_URL_LIVE = 'https://api.dibspayment.eu';
 
+    public const CHECKOUT_JS_TEST = 'https://test.checkout.dibspayment.eu/v1/checkout.js';
+    public const CHECKOUT_JS_LIVE = 'https://checkout.dibspayment.eu/v1/checkout.js';
+
     public const CONFIG_PATH_PREFIX = 'payment/netseasy/';
 
     public function getApiSecretKey(?int $storeId = null): string
@@ -34,6 +37,15 @@ class Maho_NetsEasy_Helper_Data extends Mage_Core_Helper_Abstract
     public function getApiBaseUrl(?int $storeId = null): string
     {
         return $this->isTestMode($storeId) ? self::API_URL_TEST : self::API_URL_LIVE;
+    }
+
+    /**
+     * URL of the Nets embedded-checkout JS SDK. The test environment requires the
+     * test SDK; loading the production SDK with a test session renders nothing.
+     */
+    public function getCheckoutScriptUrl(?int $storeId = null): string
+    {
+        return $this->isTestMode($storeId) ? self::CHECKOUT_JS_TEST : self::CHECKOUT_JS_LIVE;
     }
 
     public function getCheckoutFlow(?int $storeId = null): string

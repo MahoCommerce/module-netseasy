@@ -80,11 +80,13 @@ class Maho_NetsEasy_Model_Api_Payment
         $this->getClient()->put("/v1/payments/{$paymentId}/terminate", [], $storeId);
     }
 
-    public function updateReference(string $paymentId, string $reference, ?int $storeId = null): void
+    public function updateReference(string $paymentId, string $reference, string $checkoutUrl, ?int $storeId = null): void
     {
         $this->validateNetsId($paymentId, 'payment ID');
+        // Nets requires both reference and checkoutUrl on this endpoint.
         $this->getClient()->put("/v1/payments/{$paymentId}/referenceinformation", [
             'reference' => $reference,
+            'checkoutUrl' => $checkoutUrl,
         ], $storeId);
     }
 }

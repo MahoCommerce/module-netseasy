@@ -41,6 +41,13 @@ class Maho_NetsEasy_Block_Checkout extends Mage_Core_Block_Template
         return $locale->getCheckoutLocale();
     }
 
+    public function getCheckoutScriptUrl(): string
+    {
+        /** @var Maho_NetsEasy_Helper_Data $helper */
+        $helper = Mage::helper('netseasy');
+        return $helper->getCheckoutScriptUrl();
+    }
+
     public function getMsgProcessing(): string
     {
         return $this->__('Processing payment...');

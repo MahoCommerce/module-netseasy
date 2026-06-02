@@ -74,7 +74,7 @@ class Maho_NetsEasy_Helper_Data extends Mage_Core_Helper_Abstract
         if ($value === '') {
             return '';
         }
-        return trim(Mage::helper('core')->decrypt($value));
+        return trim((string) Mage::helper('core')->decrypt($value));
     }
 
     public function getTermsUrl(?int $storeId = null): string

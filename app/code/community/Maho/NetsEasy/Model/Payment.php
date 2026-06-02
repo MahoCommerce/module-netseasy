@@ -27,7 +27,6 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_canVoid                 = true;
     protected $_canUseInternal          = false;
     protected $_canUseCheckout          = true;
-    protected $_canUseForMultishipping  = false;
     protected $_canFetchTransactionInfo = true;
     protected $_canManageRecurringProfiles = false;
 

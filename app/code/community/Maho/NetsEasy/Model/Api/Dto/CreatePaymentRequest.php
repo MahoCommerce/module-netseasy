@@ -145,7 +145,8 @@ class Maho_NetsEasy_Model_Api_Dto_CreatePaymentRequest extends Maho_NetsEasy_Mod
             $checkout['returnUrl'] = $this->returnUrl;
         }
 
-        if ($this->cancelUrl !== null) {
+        // Nets only accepts cancelUrl for the hosted payment page; it is rejected for EmbeddedCheckout.
+        if ($this->integrationType === 'HostedPaymentPage' && $this->cancelUrl !== null) {
             $checkout['cancelUrl'] = $this->cancelUrl;
         }
 

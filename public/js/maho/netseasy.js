@@ -18,6 +18,7 @@
     const checkoutKey = container.dataset.checkoutKey;
     const returnUrl = container.dataset.returnUrl;
     const locale = container.dataset.locale || 'en-GB';
+    const checkoutSrc = container.dataset.checkoutSrc || 'https://checkout.dibspayment.eu/v1/checkout.js';
     const msgProcessing = container.dataset.msgProcessing || 'Processing payment...';
     const msgMissingConfig = container.dataset.msgMissingConfig || 'Missing checkout configuration.';
     const msgLoadFailed = container.dataset.msgLoadFailed || 'Failed to load payment widget. Please refresh the page.';
@@ -60,7 +61,7 @@
 
     // Load Nets Easy SDK
     const script = document.createElement('script');
-    script.src = 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
+    script.src = checkoutSrc;
     script.onload = initCheckout;
     script.onerror = function () {
         container.textContent = msgLoadFailed;

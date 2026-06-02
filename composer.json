@@ -4,7 +4,8 @@
     "type": "maho-module",
     "license": ["OSL-3.0", "AFL-3.0"],
     "require": {
-        "php": ">=8.3"
+        "php": ">=8.3",
+        "mahocommerce/maho": ">=26.5"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "*",

@@ -57,4 +57,4 @@ Single custom table `netseasy_payment` (setup in `sql/maho_netseasy_setup/instal
 - Private helper accessors pattern: `private function getHelper()`, `private function getApiPayment()`
 - Logging goes to `netseasy.log` file
 - Translations via `app/locale/en_US/Maho_NetsEasy.csv`
-- License header: OSL-3.0, copyright Maho (https://mahocommerce.com)
+- License header: SPDX format. PHP/phtml/JS/XML carry `SPDX-FileCopyrightText: 2026 Maho <https://mahocommerce.com>` and `SPDX-License-Identifier: OSL-3.0`. PHP/phtml keep the SPDX block inside the top `/** */` docblock with `@package Maho_NetsEasy`; XML uses a plain `<!-- -->` comment (no `@package`); JS uses `//` line comments.

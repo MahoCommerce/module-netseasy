@@ -154,6 +154,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
     /**
      * Handle payment.checkout.completed webhook
      */
+    #[Maho\Config\Route('/netseasy/webhook/checkoutCompleted', methods: ['POST'])]
     public function checkoutCompletedAction(): void
     {
         $data = $this->_processWebhook();
@@ -233,6 +234,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
     /**
      * Handle payment.charge.created.v2 webhook
      */
+    #[Maho\Config\Route('/netseasy/webhook/chargeCreated', methods: ['POST'])]
     public function chargeCreatedAction(): void
     {
         $data = $this->_processWebhook();
@@ -277,6 +279,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
     /**
      * Handle payment.refund.completed webhook
      */
+    #[Maho\Config\Route('/netseasy/webhook/refundCompleted', methods: ['POST'])]
     public function refundCompletedAction(): void
     {
         $data = $this->_processWebhook();
@@ -315,6 +318,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
      * Handle payment.reservation.created.v2 webhook
      * Confirms that a payment has been reserved (authorized)
      */
+    #[Maho\Config\Route('/netseasy/webhook/reservationCreated', methods: ['POST'])]
     public function reservationCreatedAction(): void
     {
         $data = $this->_processWebhook();
@@ -364,6 +368,7 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
     /**
      * Handle payment.cancel.created webhook
      */
+    #[Maho\Config\Route('/netseasy/webhook/cancelCreated', methods: ['POST'])]
     public function cancelCreatedAction(): void
     {
         $data = $this->_processWebhook();

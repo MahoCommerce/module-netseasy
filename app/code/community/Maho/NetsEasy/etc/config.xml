@@ -41,35 +41,8 @@ SPDX-License-Identifier: OSL-3.0
                 </setup>
             </maho_netseasy_setup>
         </resources>
-        <events>
-            <sales_order_payment_capture>
-                <observers>
-                    <netseasy_capture_payment>
-                        <class>netseasy/observer</class>
-                        <method>capturePayment</method>
-                    </netseasy_capture_payment>
-                </observers>
-            </sales_order_payment_capture>
-            <sales_order_place_after>
-                <observers>
-                    <netseasy_update_payment_reference>
-                        <class>netseasy/observer</class>
-                        <method>updatePaymentReference</method>
-                    </netseasy_update_payment_reference>
-                </observers>
-            </sales_order_place_after>
-        </events>
     </global>
     <frontend>
-        <routers>
-            <netseasy>
-                <use>standard</use>
-                <args>
-                    <module>Maho_NetsEasy</module>
-                    <frontName>netseasy</frontName>
-                </args>
-            </netseasy>
-        </routers>
         <secure_url>
             <netseasy_payment>/netseasy/payment</netseasy_payment>
             <netseasy_webhook>/netseasy/webhook</netseasy_webhook>

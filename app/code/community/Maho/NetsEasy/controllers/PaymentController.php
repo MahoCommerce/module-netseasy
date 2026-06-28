@@ -28,6 +28,7 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
     /**
      * Hosted flow: redirect customer to Nets Easy hosted payment page
      */
+    #[Maho\Config\Route('/netseasy/payment/redirect')]
     public function redirectAction(): void
     {
         $session = $this->_getCheckoutSession();
@@ -70,6 +71,7 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
     /**
      * Embedded flow: render page with embedded checkout widget
      */
+    #[Maho\Config\Route('/netseasy/payment/checkout')]
     public function checkoutAction(): void
     {
         $session = $this->_getCheckoutSession();
@@ -106,6 +108,7 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
      * Hosted flow: GET redirect from Nets payment page
      * Embedded flow: POST via mahoFetch() from checkout.js
      */
+    #[Maho\Config\Route('/netseasy/payment/return')]
     public function returnAction(): void
     {
         $isAjax = $this->getRequest()->isPost();
@@ -166,6 +169,7 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
     /**
      * Customer cancelled payment
      */
+    #[Maho\Config\Route('/netseasy/payment/cancel')]
     public function cancelAction(): void
     {
         $this->_getCheckoutSession()->addNotice(

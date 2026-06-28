@@ -14,6 +14,7 @@ class Maho_NetsEasy_Model_Observer
      * Observer for sales_order_payment_capture event.
      * Ensures the Nets payment ID is available on the payment object before capture.
      */
+    #[Maho\Config\Observer('sales_order_payment_capture', id: 'netseasy_capture_payment')]
     public function capturePayment(\Maho\Event\Observer $observer): void
     {
         /** @var Mage_Sales_Model_Order_Payment $payment */
@@ -35,6 +36,7 @@ class Maho_NetsEasy_Model_Observer
      * Updates the Nets Easy payment reference with the actual order increment ID
      * and links the order in the netseasy_payment tracking table.
      */
+    #[Maho\Config\Observer('sales_order_place_after', id: 'netseasy_update_payment_reference')]
     public function updatePaymentReference(\Maho\Event\Observer $observer): void
     {
         /** @var Mage_Sales_Model_Order $order */

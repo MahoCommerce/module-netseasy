@@ -50,7 +50,12 @@
         });
 
         checkout.on('pay-initialized', function () {
-            container.style.minHeight = '400px';
+            // When the customer clicks Pay, Nets freezes the embedded checkout and
+            // waits for the merchant to confirm the order is ready before it reserves
+            // or charges the payment. Our order is already placed before this page
+            // loads, so we finalize immediately. Without this handshake the Pay button
+            // does nothing at all — no charge, no network request, no error.
+            checkout.send('payment-order-finalized', true);
         });
     }
 

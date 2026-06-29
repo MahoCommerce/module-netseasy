@@ -415,11 +415,18 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if ($telephone) {
             $countryId = $billingAddress ? (string) $billingAddress->getCountryId() : '';
             $dialCode = $this->getDialCodeByCountry($countryId);
-            $phone = [
-                'prefix' => $dialCode,
-                'number' => $telephone,
-            ];
+            // Only send the phone when we have a real dial code; Nets rejects a bogus
+            // prefix, and the phone number is optional consumer data anyway.
+            if ($dialCode !== '') {
+                $phone = [
+                    'prefix' => $dialCode,
+                    'number' => $telephone,
+                ];
+            }
         }
+
+        $firstName = $billingAddress ? (string) $billingAddress->getFirstname() : '';
+        $lastName = $billingAddress ? (string) $billingAddress->getLastname() : '';
 
         // Detect B2B: if company name is set on the billing address
         $companyName = $billingAddress ? (string) $billingAddress->getCompany() : '';
@@ -427,12 +434,12 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $request->setCompanyConsumer(
                 $email,
                 $companyName,
+                $firstName,
+                $lastName,
                 $shipping,
                 $phone,
             );
         } else {
-            $firstName = $billingAddress ? (string) $billingAddress->getFirstname() : '';
-            $lastName = $billingAddress ? (string) $billingAddress->getLastname() : '';
             $request->setPrivateConsumer(
                 $email,
                 $firstName,
@@ -452,7 +459,7 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
             'NO' => '+47', 'PL' => '+48', 'SE' => '+46', 'US' => '+1',
         ];
 
-        return $dialCodes[strtoupper($countryId)] ?? '+00';
+        return $dialCodes[strtoupper($countryId)] ?? '';
     }
 
     private function calculateShippingTaxPercent(Mage_Sales_Model_Order $order): float

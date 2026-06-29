@@ -66,22 +66,24 @@ class Maho_NetsEasy_Model_Api_Dto_CreatePaymentRequest extends Maho_NetsEasy_Mod
         ?array $shippingAddress = null,
         ?array $phoneNumber = null,
     ): self {
-        $privatePerson = [
-            'email' => $email,
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-        ];
-
-        if ($phoneNumber !== null) {
-            $privatePerson['phoneNumber'] = $phoneNumber;
-        }
-
+        // Nets expects email, phoneNumber and shippingAddress at the consumer top
+        // level; privatePerson carries only the name. Nesting them inside
+        // privatePerson makes Nets silently drop them, leaving the session without
+        // a consumer email so the embedded checkout cannot complete the payment.
         $this->consumer = [
-            'privatePerson' => $privatePerson,
+            'email' => $email,
+            'privatePerson' => [
+                'firstName' => $firstName,
+                'lastName' => $lastName,
+            ],
         ];
 
         if ($shippingAddress !== null) {
             $this->consumer['shippingAddress'] = $shippingAddress;
+        }
+
+        if ($phoneNumber !== null) {
+            $this->consumer['phoneNumber'] = $phoneNumber;
         }
 
         return $this;
@@ -94,26 +96,30 @@ class Maho_NetsEasy_Model_Api_Dto_CreatePaymentRequest extends Maho_NetsEasy_Mod
         #[\SensitiveParameter]
         string $contactEmail,
         string $companyName,
+        string $contactFirstName,
+        string $contactLastName,
         ?array $shippingAddress = null,
         ?array $phoneNumber = null,
     ): self {
-        $company = [
-            'name' => $companyName,
-            'contactDetails' => [
-                'email' => $contactEmail,
-            ],
-        ];
-
-        if ($phoneNumber !== null) {
-            $company['contactDetails']['phoneNumber'] = $phoneNumber;
-        }
-
+        // As with privatePerson, email/phoneNumber/shippingAddress live at the
+        // consumer top level. The company object holds only name and contact.
         $this->consumer = [
-            'company' => $company,
+            'email' => $contactEmail,
+            'company' => [
+                'name' => $companyName,
+                'contact' => [
+                    'firstName' => $contactFirstName,
+                    'lastName' => $contactLastName,
+                ],
+            ],
         ];
 
         if ($shippingAddress !== null) {
             $this->consumer['shippingAddress'] = $shippingAddress;
+        }
+
+        if ($phoneNumber !== null) {
+            $this->consumer['phoneNumber'] = $phoneNumber;
         }
 
         return $this;

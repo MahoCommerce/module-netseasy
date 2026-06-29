@@ -44,6 +44,8 @@ class Maho_NetsEasy_Model_OrderProcessor
 
         $paymentAction = Mage::helper('netseasy')->getPaymentAction((int) $order->getStoreId());
         if ($paymentAction === Mage_Payment_Model_Method_Abstract::ACTION_AUTHORIZE_CAPTURE && $order->canInvoice()) {
+            // Capture online: our payment model charges Nets, the invoice records the
+            // capture, and the order moves to processing.
             $invoice = $order->prepareInvoice();
             $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_ONLINE);
             $invoice->register();
@@ -55,7 +57,11 @@ class Maho_NetsEasy_Model_OrderProcessor
                 ->addObject($order)
                 ->save();
         } else {
-            $order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, $comment);
+            // Authorize only: record the authorization transaction (this also promotes
+            // the order to processing). A bare setState() would leave the Transactions
+            // grid empty and give admin nothing to void/refund against.
+            $payment->registerAuthorizationNotification((float) $order->getBaseGrandTotal());
+            $order->addStatusHistoryComment($comment);
             $order->save();
         }
 

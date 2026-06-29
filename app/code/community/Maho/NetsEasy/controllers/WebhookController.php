@@ -186,43 +186,12 @@ class Maho_NetsEasy_WebhookController extends Mage_Core_Controller_Front_Action
                 return;
             }
 
-            /** @var Mage_Sales_Model_Order_Payment $payment */
-            $payment = $order->getPayment();
-            $payment->setAdditionalInformation('netseasy_payment_type', $paymentResponse->getPaymentType());
-            $payment->setAdditionalInformation('netseasy_payment_method', $paymentResponse->getPaymentMethod());
-
-            if ($maskedPan = $paymentResponse->getMaskedPan()) {
-                $payment->setAdditionalInformation('netseasy_masked_pan', $maskedPan);
-            }
-
-            $payment->setTransactionId($paymentId);
-            $payment->setIsTransactionClosed(false);
-
-            // Auto-capture: create invoice if payment action is authorize_capture
-            $paymentAction = Mage::helper('netseasy')->getPaymentAction((int) $order->getStoreId());
-            if ($paymentAction === 'authorize_capture' && $order->canInvoice()) {
-                $invoice = $order->prepareInvoice();
-                $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_ONLINE);
-                $invoice->register();
-
-                $order->setState(
-                    Mage_Sales_Model_Order::STATE_PROCESSING,
-                    true,
-                    Mage::helper('netseasy')->__('Payment confirmed by Nets Easy webhook.'),
-                );
-
-                Mage::getModel('core/resource_transaction')
-                    ->addObject($invoice)
-                    ->addObject($order)
-                    ->save();
-            } else {
-                $order->setState(
-                    Mage_Sales_Model_Order::STATE_PROCESSING,
-                    true,
-                    Mage::helper('netseasy')->__('Payment confirmed by Nets Easy webhook.'),
-                );
-                $order->save();
-            }
+            // Idempotent: a no-op if the synchronous return flow already finalized the order.
+            Mage::getModel('netseasy/orderProcessor')->markReservedOrCharged(
+                $order,
+                $paymentResponse,
+                Mage::helper('netseasy')->__('Payment confirmed by Nets Easy webhook.'),
+            );
 
             $this->_sendJsonResponse(200, ['success' => true]);
         } catch (Exception $e) {

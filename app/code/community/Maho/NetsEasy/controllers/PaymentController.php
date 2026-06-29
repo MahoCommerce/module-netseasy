@@ -139,6 +139,11 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
             $paymentResponse = $this->_getApiPayment()->getPayment($paymentId, (int) $order->getStoreId());
 
             if (($paymentResponse->isReserved() || $paymentResponse->isCharged()) && !$paymentResponse->isCancelled()) {
+                Mage::getModel('netseasy/orderProcessor')->markReservedOrCharged(
+                    $order,
+                    $paymentResponse,
+                    $this->_getHelper()->__('Payment confirmed by Nets Easy.'),
+                );
                 $session->getQuote()->setIsActive(0)->save();
                 $successUrl = Mage::getUrl('checkout/onepage/success', ['_secure' => true]);
                 if ($isAjax) {

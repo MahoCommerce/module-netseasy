@@ -67,22 +67,23 @@ class Maho_NetsEasy_Model_Api_Dto_OrderItem
     }
 
     /**
-     * Create an OrderItem for discount line
+     * Create the line that reconciles the item totals with the requested amount.
+     *
+     * $amountMinor is the signed difference in minor units: negative for a discount
+     * (the usual case), positive for a surcharge or a rounding shortfall.
      */
-    public static function fromDiscount(float $amount): self
+    public static function fromAdjustment(int $amountMinor): self
     {
-        $discountAmount = self::toMinorUnits(abs($amount));
-
         return new self(
-            reference: 'discount',
-            name: 'Discount',
+            reference: $amountMinor < 0 ? 'discount' : 'adjustment',
+            name: $amountMinor < 0 ? 'Discount' : 'Adjustment',
             quantity: 1,
             unit: 'pcs',
-            unitPrice: -$discountAmount,
+            unitPrice: $amountMinor,
             taxRate: 0,
             taxAmount: 0,
-            grossTotalAmount: -$discountAmount,
-            netTotalAmount: -$discountAmount,
+            grossTotalAmount: $amountMinor,
+            netTotalAmount: $amountMinor,
         );
     }
 

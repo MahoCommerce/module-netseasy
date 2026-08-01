@@ -113,8 +113,9 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $chargeRequest = new Maho_NetsEasy_Model_Api_Dto_ChargeRequest($amountMinor);
 
         if ($this->getHelper()->shouldSendOrderItems((int) $order->getStoreId())) {
-            $items = $this->buildOrderItemsFromInvoice($payment);
-            $chargeRequest->setOrderItems($items);
+            $chargeRequest->setOrderItems(
+                $this->balanceOrderItems($this->buildOrderItemsFromInvoice($payment), $amountMinor),
+            );
         }
 
         $response = $this->getApiPayment()->chargePayment(
@@ -147,6 +148,9 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         if ($this->getHelper()->shouldSendOrderItems((int) $order->getStoreId())) {
             $items = $this->buildOrderItemsFromCreditmemo($payment);
+            if ($items !== []) {
+                $items = $this->balanceOrderItems($items, $amountMinor);
+            }
             $refundRequest->setOrderItems($items);
         }
 
@@ -239,8 +243,7 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
         );
 
         if ($helper->shouldSendOrderItems($storeId)) {
-            $items = $this->buildOrderItemsFromOrder($order);
-            $request->setItems($items);
+            $request->setItems($this->balanceOrderItems($this->buildOrderItemsFromOrder($order), $grandTotal));
         }
 
         if ($helper->getMerchantHandlesConsumerData($storeId)) {
@@ -299,9 +302,35 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
             );
         }
 
-        $discount = (float) $order->getBaseDiscountAmount();
-        if ($discount < 0) {
-            $items[] = Maho_NetsEasy_Model_Api_Dto_OrderItem::fromDiscount($discount);
+        return $items;
+    }
+
+    /**
+     * Append a balancing line so the item gross totals add up to $targetMinor exactly.
+     *
+     * Nets rejects any request whose order items do not sum to the amount it declares.
+     * base_discount_amount cannot serve as the discount line as-is: on a store with
+     * tax-inclusive prices and "apply tax after discount" it carries the VAT portion of
+     * the discount, while the grand total only drops by the net part — the item's own
+     * base_tax_amount is already computed on the discounted price. A 119 DKK item with a
+     * 10% coupon then ships as 9520 + 2142 - 1190 = 10472 against an amount of 10710, and
+     * Nets answers 400.
+     *
+     * Deriving the line from the leftover difference keeps the payload balanced under any
+     * tax configuration, and absorbs unitPrice * quantity rounding at the same time.
+     *
+     * @param Maho_NetsEasy_Model_Api_Dto_OrderItem[] $items
+     * @return Maho_NetsEasy_Model_Api_Dto_OrderItem[]
+     */
+    private function balanceOrderItems(array $items, int $targetMinor): array
+    {
+        $total = array_sum(array_map(
+            static fn(Maho_NetsEasy_Model_Api_Dto_OrderItem $item) => $item->grossTotalAmount,
+            $items,
+        ));
+
+        if ($total !== $targetMinor) {
+            $items[] = Maho_NetsEasy_Model_Api_Dto_OrderItem::fromAdjustment($targetMinor - $total);
         }
 
         return $items;
@@ -410,20 +439,10 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
             ];
         }
 
-        $phone = null;
-        $telephone = (string) ($billingAddress ? $billingAddress->getTelephone() : '');
-        if ($telephone) {
-            $countryId = $billingAddress ? (string) $billingAddress->getCountryId() : '';
-            $dialCode = $this->getDialCodeByCountry($countryId);
-            // Only send the phone when we have a real dial code; Nets rejects a bogus
-            // prefix, and the phone number is optional consumer data anyway.
-            if ($dialCode !== '') {
-                $phone = [
-                    'prefix' => $dialCode,
-                    'number' => $telephone,
-                ];
-            }
-        }
+        $phone = $this->buildPhoneNumber(
+            (string) ($billingAddress ? $billingAddress->getTelephone() : ''),
+            $billingAddress ? (string) $billingAddress->getCountryId() : '',
+        );
 
         $firstName = $billingAddress ? (string) $billingAddress->getFirstname() : '';
         $lastName = $billingAddress ? (string) $billingAddress->getLastname() : '';
@@ -448,6 +467,61 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $phone,
             );
         }
+    }
+
+    /**
+     * Split a stored telephone into the {prefix, number} pair Nets expects.
+     *
+     * Nets wants the country calling code and the subscriber number in separate,
+     * digits-only fields. Customers routinely type the full international number
+     * ("+45 93 83 28 53"), and passing that straight through as `number` — prefix
+     * included — makes Nets reject the whole payment with a 400. The phone is
+     * optional consumer data, so anything we cannot split with confidence is
+     * dropped rather than sent in a shape that fails the payment.
+     *
+     * @return array{prefix: string, number: string}|null
+     */
+    private function buildPhoneNumber(string $telephone, string $countryId): ?array
+    {
+        $telephone = trim($telephone);
+        if ($telephone === '') {
+            return null;
+        }
+
+        $dialCode = $this->getDialCodeByCountry($countryId);
+        if ($dialCode === '') {
+            return null;
+        }
+
+        $digits = preg_replace('/\D+/', '', $telephone) ?? '';
+        $dialDigits = ltrim($dialCode, '+');
+
+        // Only treat the leading digits as a country code when the customer said so
+        // ("+45..." or "0045..."). A bare "45123456" is a perfectly good local Danish
+        // number, and stripping it would silently mangle the phone.
+        $isInternational = str_starts_with($telephone, '+') || str_starts_with($telephone, '00');
+        if (str_starts_with($telephone, '00')) {
+            $digits = substr($digits, 2);
+        }
+
+        if ($isInternational) {
+            if (!str_starts_with($digits, $dialDigits)) {
+                // An explicit country code that is not the billing country's: we have no
+                // table to split it on, so skip the phone instead of guessing.
+                return null;
+            }
+            $digits = substr($digits, strlen($dialDigits));
+        }
+
+        // Nets validates the subscriber number as a plain digit string.
+        if (!preg_match('/^\d{5,14}$/', $digits)) {
+            return null;
+        }
+
+        return [
+            'prefix' => $dialCode,
+            'number' => $digits,
+        ];
     }
 
     private function getDialCodeByCountry(string $countryId): string

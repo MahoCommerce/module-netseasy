@@ -105,7 +105,7 @@ class Maho_NetsEasy_Model_Api_Client
                     }
                 }
 
-                $errorMessage = $errorData['errors']['property'][0] ?? $errorData['message'] ?? "HTTP {$statusCode}";
+                $errorMessage = $this->extractErrorMessage($errorData, $statusCode);
                 Mage::log(
                     sprintf('NetsEasy API Error [%d] %s %s: %s', $statusCode, $method, $endpoint, $content),
                     Mage::LOG_ERROR,
@@ -129,6 +129,42 @@ class Maho_NetsEasy_Model_Api_Client
             );
             Mage::throwException(Mage::helper('netseasy')->__('Nets Easy API communication error. Please try again later.'));
         }
+    }
+
+    /**
+     * Turn an error payload into something a human can act on.
+     *
+     * Nets reports validation failures as {"errors": {"<field>": ["<message>", ...]}},
+     * where <field> is the offending property path and therefore differs per error.
+     * It cannot be read through a fixed key, so flatten whatever is there instead —
+     * otherwise every rejected request degrades to a bare "HTTP 400".
+     */
+    private function extractErrorMessage(array $errorData, int $statusCode): string
+    {
+        if (isset($errorData['errors']) && is_array($errorData['errors'])) {
+            $messages = [];
+            foreach ($errorData['errors'] as $property => $propertyErrors) {
+                foreach ((array) $propertyErrors as $message) {
+                    if (!is_string($message)) {
+                        continue;
+                    }
+                    $messages[] = is_string($property)
+                        ? sprintf('%s: %s', $property, $message)
+                        : $message;
+                }
+            }
+            if ($messages !== []) {
+                return implode('; ', $messages);
+            }
+        }
+
+        foreach (['message', 'detail', 'title', 'error'] as $key) {
+            if (!empty($errorData[$key]) && is_string($errorData[$key])) {
+                return $errorData[$key];
+            }
+        }
+
+        return "HTTP {$statusCode}";
     }
 
     private function redactSensitiveFields(array $data): array

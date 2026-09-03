@@ -181,11 +181,9 @@ class Maho_NetsEasy_Model_Api_Client
 
     private function getHttpClient(): HttpClientInterface
     {
-        if ($this->httpClient === null) {
-            $this->httpClient = HttpClient::create([
-                'timeout' => self::TIMEOUT,
-            ]);
-        }
+        $this->httpClient ??= HttpClient::create([
+            'timeout' => self::TIMEOUT,
+        ]);
         return $this->httpClient;
     }
 }

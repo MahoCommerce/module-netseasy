@@ -35,7 +35,7 @@ $table = $installer->getConnection()
         'nullable' => false,
         'default'  => 'embedded',
     ], 'Checkout Flow (embedded or hosted)')
-    ->addColumn('created_at', Maho\Db\Ddl\Table::TYPE_TIMESTAMP, null, [
+    ->addColumn('created_at', Maho\Db\Ddl\Table::TYPE_DATETIME, null, [
         'nullable' => false,
         'default'  => Maho\Db\Ddl\Table::TIMESTAMP_INIT,
     ], 'Created At')

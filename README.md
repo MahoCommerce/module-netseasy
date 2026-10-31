@@ -2,7 +2,7 @@
 
 ![Maho Commerce](https://img.shields.io/badge/Maho_Commerce-module-orange)
 ![License](https://img.shields.io/badge/license-OSL--3.0-blue)
-![PHP](https://img.shields.io/badge/php-%3E%3D8.3-8892BF)
+![PHP](https://img.shields.io/badge/php-%3E%3D8.5.1-8892BF)
 ![PHPStan Level](https://img.shields.io/badge/PHPStan-level%208-brightgreen)
 
 **Nexi Nets Easy** (formerly DIBS) payment gateway integration for [Maho Commerce](https://mahocommerce.com).
@@ -24,7 +24,7 @@ Accept payments via cards, wallets, and local payment methods across the Nordics
 
 ## Requirements
 
-- PHP >= 8.3
+- PHP >= 8.5.1
 - Maho Commerce
 - A [Nexi Nets Easy](https://www.nexigroup.com/en/solutions/e-commerce/) merchant account
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Maho_NetsEasy is a payment gateway module integrating **Nexi Nets Easy** (formerly DIBS) into **Maho Commerce** (OpenMage/Magento 1 fork). It is a standalone composer package (`mahocommerce/module-netseasy`, type `maho-module`) installed into a Maho store.
 
-Requires PHP >= 8.3. Uses `declare(strict_types=1)` and PHP 8 features (named arguments, `#[\Override]`).
+Requires PHP >= 8.5.1. Uses `declare(strict_types=1)` and PHP 8 features (named arguments, `#[\Override]`).
 
 ## Architecture
 

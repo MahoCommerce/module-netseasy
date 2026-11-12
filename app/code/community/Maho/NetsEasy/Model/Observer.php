@@ -58,7 +58,7 @@ class Maho_NetsEasy_Model_Observer
             $apiPayment = Mage::getModel('netseasy/api_payment');
             $apiPayment->updateReference(
                 $paymentId,
-                $order->getIncrementId(),
+                (string) $order->getIncrementId(),
                 Mage::getUrl('netseasy/payment/checkout', ['_secure' => true]),
                 (int) $order->getStoreId(),
             );

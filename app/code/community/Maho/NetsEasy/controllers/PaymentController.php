@@ -144,7 +144,7 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
                     $paymentResponse,
                     $this->_getHelper()->__('Payment confirmed by Nets Easy.'),
                 );
-                $session->getQuote()->setIsActive(0)->save();
+                $session->getQuote()->setIsActive(false)->save();
                 $successUrl = Mage::getUrl('checkout/onepage/success', ['_secure' => true]);
                 if ($isAjax) {
                     $this->_sendJsonResponse(['redirect' => $successUrl]);
@@ -225,7 +225,7 @@ class Maho_NetsEasy_PaymentController extends Mage_Core_Controller_Front_Action
 
         $quote = Mage::getModel('sales/quote')->load($order->getQuoteId());
         if ($quote->getId()) {
-            $quote->setIsActive(1)
+            $quote->setIsActive(true)
                 ->setReservedOrderId('')
                 ->save();
             $session->replaceQuote($quote)

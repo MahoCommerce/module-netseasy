@@ -40,8 +40,6 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_canUseCheckout          = true;
     #[\Override]
     protected $_canFetchTransactionInfo = true;
-    #[\Override]
-    protected $_canManageRecurringProfiles = false;
 
     private function getHelper(): Maho_NetsEasy_Helper_Data
     {
@@ -100,6 +98,7 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
         return $this;
     }
 
+    #[\Override]
     public function getOrderPlaceRedirectUrl(): string
     {
         $flow = $this->getInfoInstance()->getAdditionalInformation('netseasy_checkout_flow')
@@ -247,8 +246,8 @@ class Maho_NetsEasy_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $request = new Maho_NetsEasy_Model_Api_Dto_CreatePaymentRequest(
             amount: $grandTotal,
-            currency: $order->getBaseCurrencyCode(),
-            reference: $order->getIncrementId(),
+            currency: (string) $order->getBaseCurrencyCode(),
+            reference: (string) $order->getIncrementId(),
             integrationType: $integrationType,
             termsUrl: $helper->getTermsUrl($storeId),
             merchantHandlesConsumerData: $helper->getMerchantHandlesConsumerData($storeId),
